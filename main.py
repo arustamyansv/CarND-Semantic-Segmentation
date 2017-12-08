@@ -33,7 +33,7 @@ def load_vgg(sess, vgg_path):
     vgg_layer4_out_tensor_name = 'layer4_out:0'
     vgg_layer7_out_tensor_name = 'layer7_out:0'
 
-    tf.save_model.loader.load(sess, [vgg_tag], vgg_tag)
+    tf.saved_model.loader.load(sess, [vgg_tag], vgg_path)
 
     graph = tf.get_default_graph()
     w1 = graph.get_tensor_by_name(vgg_input_tensor_name)
@@ -60,33 +60,33 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
 
     # Layer 7 processing
     l7_conv_1x1 = tf.layers.conv2d(vgg_layer7_out, num_classes, 1, padding='same',
-        kernel_regularizer=tg.contrib.layers.l2_regularizer(1e-3))
+        kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
     # upsampling
     l7_output = tf.layers.conv2d_transpose(l7_conv_1x1, num_classes, 4, 2, padding='same',
-        kernel_regularizer=tg.contrib.layers.l2_regularizer(1e-3))
+        kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
     # Layer 4 processing
     l4_conv_1x1 = tf.layers.conv2d(vgg_layer4_out, num_classes, 1, padding='same',
-            kernel_regularizer=tg.contrib.layers.l2_regularizer(1e-3))
+        kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
     # add to previous result
     merged = tf.add(l7_output, l4_conv_1x1)
 
     # upsampling
     l4_output = tf.layers.conv2d_transpose(merged, num_classes, 4, 2, padding='same',
-        kernel_regularizer=tg.contrib.layers.l2_regularizer(1e-3))
+        kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
     # Layer 3 processing
     l3_conv_1x1 = tf.layers.conv2d(vgg_layer3_out, num_classes, 1, padding='same',
-        kernel_regularizer=tg.contrib.layers.l2_regularizer(1e-3))
+        kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
     # add to previous result
     merged = tf.add(l4_output, l3_conv_1x1)
 
     # upsampling
     l3_output = tf.layers.conv2d_transpose(merged, num_classes, 16, 8, padding='same',
-        kernel_regularizer=tg.contrib.layers.l2_regularizer(1e-3))
+        kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
     return l3_output
 
@@ -108,7 +108,7 @@ def optimize(nn_last_layer, correct_label, learning_rate, num_classes):
     labels = tf.reshape(correct_label, (-1, num_classes))
 
     # define a loss function
-    cross_entropy_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits, labels))
+    cross_entropy_loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels))
 
     optimizer = tf.train.AdamOptimizer(learning_rate)
 
