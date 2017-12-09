@@ -60,17 +60,17 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
 
     # Layer 7 processing
     l7_conv_1x1 = tf.layers.conv2d(vgg_layer7_out, num_classes, 1, padding='same',
-        kernel_initializer= tf.random_normal_initializer(stddev=0.01),
+        kernel_initializer= tf.truncated_normal_initializer(stddev=0.01),
         kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
     # upsampling
     l7_output = tf.layers.conv2d_transpose(l7_conv_1x1, num_classes, 4, 2, padding='same',
-        kernel_initializer= tf.random_normal_initializer(stddev=0.01),
+        kernel_initializer= tf.truncated_normal_initializer(stddev=0.01),
         kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
     # Layer 4 processing
     l4_conv_1x1 = tf.layers.conv2d(vgg_layer4_out, num_classes, 1, padding='same',
-        kernel_initializer= tf.random_normal_initializer(stddev=0.01),
+        kernel_initializer= tf.truncated_normal_initializer(stddev=0.01),
         kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
     # add to previous result
@@ -78,12 +78,12 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
 
     # upsampling
     l4_output = tf.layers.conv2d_transpose(merged, num_classes, 4, 2, padding='same',
-        kernel_initializer= tf.random_normal_initializer(stddev=0.01),
+        kernel_initializer= tf.truncated_normal_initializer(stddev=0.01),
         kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
     # Layer 3 processing
     l3_conv_1x1 = tf.layers.conv2d(vgg_layer3_out, num_classes, 1, padding='same',
-        kernel_initializer= tf.random_normal_initializer(stddev=0.01),
+        kernel_initializer= tf.truncated_normal_initializer(stddev=0.01),
         kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
     # add to previous result
@@ -91,7 +91,7 @@ def layers(vgg_layer3_out, vgg_layer4_out, vgg_layer7_out, num_classes):
 
     # upsampling
     l3_output = tf.layers.conv2d_transpose(merged, num_classes, 16, 8, padding='same',
-        kernel_initializer= tf.random_normal_initializer(stddev=0.01),
+        kernel_initializer= tf.truncated_normal_initializer(stddev=0.01),
         kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3))
 
     return l3_output
