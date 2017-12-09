@@ -54,7 +54,7 @@ def conv2d(layer, num_classes):
         filters=num_classes,
         kernel_size=1,
         padding='same',
-        kernel_initializer= tf.truncated_normal_initializer(stddev=0.01),
+        kernel_initializer= tf.truncated_normal_initializer(stddev=0.005),
         kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3)
     )
     return res
@@ -69,7 +69,7 @@ def conv2d_transpose(layer, num_classes, kernel_size, strides):
         kernel_size=kernel_size,
         strides=strides,
         padding='same',
-        kernel_initializer= tf.truncated_normal_initializer(stddev=0.01),
+        kernel_initializer= tf.truncated_normal_initializer(stddev=0.005),
         kernel_regularizer=tf.contrib.layers.l2_regularizer(1e-3)
     )
     return res
